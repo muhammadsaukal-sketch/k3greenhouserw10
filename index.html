@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K3 Greenhouse — KWT Agro Tanjung</title>
+    <meta name="description" content="Panduan K3, Prosedur Piket, dan Checklist Greenhouse KWT Agro Tanjung">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #66bb6a; --green-dark: #388e3c; --green-darker: #1b5e20; --green-light: #e8f5e9;
+            --pink: #f48fb1; --pink-dark: #ec407a; --pink-light: #fce4ec;
+            --bg: #f8faf8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); font-family: 'Outfit', sans-serif; color: #333; }
+
+        /* NAVBAR */
+        .navbar-k3 { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 20px rgba(0,0,0,0.06); padding: 12px 0; position: fixed; top: 0; width: 100%; z-index: 1000; transition: 0.3s; }
+        .navbar-k3.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.1); }
+        .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
+        .nav-title { font-weight: 700; font-size: 1rem; color: var(--green-darker); }
+        .nav-title span { color: var(--pink-dark); }
+        .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; font-size: 0.78rem; padding: 5px 12px; border-radius: 20px; color: #666; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: var(--green-light); color: var(--green-dark); }
+
+        /* HERO */
+        .hero { min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, var(--green-light) 0%, #fff 40%, var(--pink-light) 100%); padding: 120px 20px 60px; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -40%; right: -15%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(244,143,177,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .hero::after { content: ''; position: absolute; bottom: -35%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(102,187,106,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-logo { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 40px rgba(56,142,60,0.2); margin-bottom: 22px; animation: floatLogo 3s ease-in-out infinite; background: white; }
+        @keyframes floatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .hero h1 { font-size: 2.2rem; font-weight: 800; color: var(--green-darker); margin-bottom: 6px; }
+        .hero h1 span { color: var(--pink-dark); }
+        .hero .subtitle { font-size: 1rem; color: #666; margin-bottom: 25px; }
+        .hero-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .hero-badge { background: white; padding: 6px 16px; border-radius: 25px; font-size: 0.8rem; font-weight: 500; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .hero-badge.green { color: var(--green-dark); }
+        .hero-badge.pink { color: var(--pink-dark); }
+
+        /* SECTIONS */
+        .section { padding: 60px 20px; max-width: 900px; margin: 0 auto; }
+        .section-title { font-weight: 800; font-size: 1.5rem; color: var(--green-darker); margin-bottom: 8px; text-align: center; }
+        .section-desc { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 35px; }
+
+        /* CARDS */
+        .info-card { background: white; border-radius: 18px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-left: 5px solid var(--green); transition: 0.4s; opacity: 0; transform: translateY(25px); }
+        .info-card.visible { opacity: 1; transform: translateY(0); }
+        .info-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        .info-card.visible:hover { transform: translateY(-3px); }
+        .info-card.pink { border-left-color: var(--pink); }
+        .info-card.warning { border-left-color: #ff9800; }
+        .info-card.red { border-left-color: #e53935; }
+        .card-header-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .card-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; flex-shrink: 0; }
+        .card-icon.green { background: linear-gradient(135deg, var(--green), var(--green-dark)); }
+        .card-icon.pink { background: linear-gradient(135deg, var(--pink), var(--pink-dark)); }
+        .card-icon.orange { background: linear-gradient(135deg, #ffa726, #f57c00); }
+        .card-icon.red { background: linear-gradient(135deg, #ef5350, #c62828); }
+        .info-card ol, .info-card ul { padding-left: 20px; margin: 0; }
+        .info-card li { margin-bottom: 8px; font-size: 0.9rem; color: #444; line-height: 1.6; }
+
+        /* CHECKLIST TEMPLATE */
+        .ckl-group { background: #fafafa; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        .ckl-group h6 { font-weight: 700; font-size: 0.88rem; margin-bottom: 10px; color: var(--green-dark); }
+        .ckl-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.88rem; }
+        .ckl-item:last-child { border: none; }
+        .ckl-box { width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 4px; flex-shrink: 0; }
+
+        /* JADWAL TABLE */
+        .jadwal-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .jadwal-table { width: 100%; border-collapse: collapse; }
+        .jadwal-table th { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white; padding: 12px 16px; font-size: 0.82rem; font-weight: 600; text-align: center; }
+        .jadwal-table td { padding: 12px 16px; font-size: 0.88rem; text-align: center; border-bottom: 1px solid #f0f0f0; background: white; }
+        .jadwal-table tr:nth-child(even) td { background: #fafafa; }
+        .jadwal-table tr:hover td { background: var(--green-light); }
+        .hari-badge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; }
+        .hari-badge.weekday { background: var(--green-light); color: var(--green-dark); }
+        .hari-badge.weekend { background: var(--pink-light); color: var(--pink-dark); }
+
+        /* FOOTER */
+        .footer { background: linear-gradient(135deg, var(--green-darker), var(--green-dark)); color: white; text-align: center; padding: 35px 20px; }
+        .footer p { font-size: 0.85rem; opacity: 0.8; }
+
+        /* PRINT BUTTON */
+        .btn-print { background: white; border: 2px solid var(--green); color: var(--green-dark); padding: 10px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Outfit', sans-serif; }
+        .btn-print:hover { background: var(--green); color: white; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5rem; }
+            .hero-logo { width: 100px; height: 100px; }
+            .section { padding: 40px 16px; }
+            .section-title { font-size: 1.25rem; }
+            .nav-links { display: none; }
+            .jadwal-table th, .jadwal-table td { padding: 8px 6px; font-size: 0.78rem; }
+        }
+
+        /* MOBILE BOTTOM NAV (only show on small screens) */
+        .bottom-nav { display: none; }
+        @media (max-width: 768px) {
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); justify-content: space-around; padding: 10px 0 16px; z-index: 1000; border-top-left-radius: 22px; border-top-right-radius: 22px; }
+            .bottom-nav a { text-decoration: none; text-align: center; color: #95a5a6; font-size: 0.68rem; font-weight: 500; transition: 0.3s; }
+            .bottom-nav a i { display: block; font-size: 1.15rem; margin-bottom: 2px; }
+            .bottom-nav a.active { color: var(--green-dark); }
+            .footer { margin-bottom: 70px; }
+        }
+
+        @media print {
+            .navbar-k3, .bottom-nav, .btn-print, .footer { display: none !important; }
+            .hero { min-height: auto; padding: 20px; }
+            .info-card { opacity: 1 !important; transform: none !important; break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+            .section { padding: 20px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar-k3" id="navbar">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="nav-brand" href="#">
+                <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="nav-logo">
+                <div class="nav-title">K3 <span>Greenhouse</span></div>
+            </a>
+            <div class="nav-links">
+                <a href="#prosedur">Prosedur</a>
+                <a href="#hak-kewajiban">Hak & Kewajiban</a>
+                <a href="#mitigasi">Mitigasi</a>
+                <a href="#checklist">Checklist</a>
+                <a href="#jadwal">Jadwal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="hero-logo">
+            <h1>K3 <span>Greenhouse</span></h1>
+            <p class="subtitle">KWT Agro Tanjung — Panduan Keselamatan & Kesehatan Kerja</p>
+            <div class="hero-badges">
+                <div class="hero-badge green"><i class="fa-solid fa-shield-halved me-1"></i>Keselamatan</div>
+                <div class="hero-badge pink"><i class="fa-solid fa-heart me-1"></i>Kesehatan</div>
+                <div class="hero-badge green"><i class="fa-solid fa-leaf me-1"></i>Greenhouse</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROSEDUR PIKET -->
+    <section class="section" id="prosedur">
+        <h2 class="section-title"><i class="fa-solid fa-clipboard-list me-2"></i>Prosedur Piket</h2>
+        <p class="section-desc">Panduan langkah-langkah keselamatan kerja selama piket greenhouse</p>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0">
+                    <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-hourglass-start"></i></div>Sebelum Piket</div>
+                    <ul>
+                        <li>Pastikan kondisi tubuh sehat (tidak demam, pusing, atau kelelahan berat).</li>
+                        <li>Gunakan pakaian tertutup dan alas kaki yang tidak licin.</li>
+                        <li>Konfirmasi jadwal ke koordinator RT yang bertugas hari itu.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card pink h-100 mb-0">
+                    <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-spinner"></i></div>Selama Piket</div>
+                    <ul>
+                        <li>Bila memungkinkan, piket dilakukan minimal berdua (buddy system), terutama menjelang senja.</li>
+                        <li>Siram tanaman sesuai arah/urutan yang telah ditentukan agar tidak ada yang terlewat atau diulang.</li>
+                        <li>Catat kehadiran dan kondisi greenhouse di barcode piket.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card warning h-100 mb-0">
+                    <div class="card-header-title"><div class="card-icon orange"><i class="fa-solid fa-check-double"></i></div>Setelah Piket</div>
+                    <ul>
+                        <li>Bersihkan dan simpan alat pada tempatnya.</li>
+                        <li>Pastikan pintu/gerbang greenhouse terkunci.</li>
+                        <li>Laporkan kejadian tidak biasa (kerusakan, hama, kecelakaan kecil) ke koordinator RT berikutnya atau pengurus KWT.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0" style="border-left-color: #1565c0;">
+                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #1976d2, #0d47a1);"><i class="fa-solid fa-bullhorn"></i></div>Mekanisme Penyampaian Keluhan</div>
+                    <p style="font-size:0.9rem; color:#444; line-height:1.6; margin:0;">Keluhan atau usulan terkait keselamatan disampaikan kepada koordinator RT atau langsung ke pengurus KWT, baik secara lisan maupun tertulis melalui website piket, untuk dibahas dalam pertemuan rutin KWT.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HAK & KEWAJIBAN -->
+    <section class="section" id="hak-kewajiban" style="background: white;">
+        <h2 class="section-title"><i class="fa-solid fa-scale-balanced me-2"></i>Hak dan Kewajiban Anggota</h2>
+        <p class="section-desc">Hak dan kewajiban terkait keselamatan kerja anggota KWT</p>
+
+        <div class="info-card">
+            <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-hand-holding-heart"></i></div>Hak Anggota</div>
+            <ul>
+                <li>Mendapat informasi risiko dan cara kerja aman sebelum piket pertama.</li>
+                <li>Menolak atau menunda piket jika kondisi kesehatan tidak memungkinkan atau cuaca ekstrem (hujan deras, panas berlebih).</li>
+                <li>Mendapat pertolongan pertama dan bantuan dari sesama anggota bila terjadi kecelakaan saat piket.</li>
+                <li>Menyampaikan keluhan atau usulan perbaikan prosedur keselamatan kepada pengurus KWT.</li>
+            </ul>
+        </div>
+
+        <div class="info-card pink">
+            <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-clipboard-user"></i></div>Kewajiban Anggota</div>
+            <ul>
+                <li>Mengikuti jadwal piket sesuai giliran RT.</li>
+                <li>Mematuhi prosedur kerja dan penggunaan alat yang telah ditetapkan.</li>
+                <li>Melaporkan kerusakan fasilitas atau potensi bahaya yang ditemukan di greenhouse.</li>
+                <li>Menjaga kebersihan dan kerapian greenhouse setelah piket.</li>
+                <li>Tidak menggunakan alat di luar fungsinya dan tidak membiarkan alat tajam/berbahaya tergeletak sembarangan.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- MITIGASI KECELAKAAN -->
+    <section class="section" id="mitigasi">
+        <h2 class="section-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Mitigasi Kecelakaan Pada Greenhouse</h2>
+        <p class="section-desc">Pencegahan dan penanganan risiko kecelakaan di area greenhouse</p>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0" style="border-left-color: #5d4037;">
+                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #795548, #3e2723);"><i class="fa-solid fa-person-falling"></i></div>Terpeleset / Tersandung</div>
+                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> lantai basah bekas siram, selang yang berserakan.</p>
+                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> gunakan alas kaki anti-slip, rapikan selang setelah dipakai, beri tanda area basah bila perlu.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0">
+                    <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-person-walking-with-cane"></i></div>Cedera Otot atau Postur</div>
+                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> mengangkat pot, karung pupuk, atau alat berat dengan posisi salah.</p>
+                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> angkat dengan menekuk lutut (bukan membungkuk), minta bantuan jika beban berat, jangan memaksakan diri.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0" style="border-left-color: #00897b;">
+                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #26a69a, #004d40);"><i class="fa-solid fa-bug"></i></div>Gigitan / Sengatan Serangga</div>
+                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> greenhouse lembap sering jadi tempat serangga, laba-laba, atau ular kecil bersembunyi.</p>
+                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> gunakan sarung tangan dan sepatu tertutup, periksa sela-sela rak/pot sebelum menyentuh langsung.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0" style="border-left-color: #6a1b9a;">
+                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #ab47bc, #4a148c);"><i class="fa-solid fa-flask"></i></div>Paparan Bahan Kimia</div>
+                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> kontak langsung tanpa pelindung saat mencampur atau mengaplikasikan pupuk/pestisida.</p>
+                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> gunakan sarung tangan dan masker saat menangani bahan kimia, simpan bahan di tempat terpisah dan tertutup, cuci tangan setelah piket.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0" style="border-left-color: #424242;">
+                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #757575, #212121);"><i class="fa-solid fa-scissors"></i></div>Luka Akibat Alat Tajam</div>
+                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> gunting kebun, sekop, atau pisau potong yang digunakan sembarangan atau tersimpan tidak rapi.</p>
+                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> simpan alat tajam di tempat khusus, gunakan sesuai fungsi, sediakan kotak P3K sederhana di greenhouse.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card h-100 mb-0" style="border-left-color: #c0ca33;">
+                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #d4e157, #827717);"><i class="fa-solid fa-house-crack"></i></div>Kerusakan Struktur</div>
+                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> atap plastik/terpal robek, rangka bambu/besi lapuk yang bisa roboh atau melukai.</p>
+                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> cek kondisi struktur secara berkala, laporkan segera jika ada bagian yang rusak atau berbahaya, jangan berdiri/berlindung di bawah bagian yang tampak rapuh.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card red mt-4">
+            <div class="card-header-title"><div class="card-icon red"><i class="fa-solid fa-phone"></i></div>Kontak Darurat</div>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div style="background:var(--pink-light);border-radius:12px;padding:12px;text-align:center;">
+                        <i class="fa-solid fa-phone fa-lg mb-2 d-block" style="color:var(--pink-dark);"></i>
+                        <div style="font-weight:700;font-size:1.2rem;color:var(--pink-dark);">112</div>
+                        <small class="text-muted">Darurat Nasional</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div style="background:var(--green-light);border-radius:12px;padding:12px;text-align:center;">
+                        <i class="fa-solid fa-truck-medical fa-lg mb-2 d-block" style="color:var(--green-dark);"></i>
+                        <div style="font-weight:700;font-size:1.2rem;color:var(--green-dark);">119</div>
+                        <small class="text-muted">Ambulans</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div style="background:#fff3e0;border-radius:12px;padding:12px;text-align:center;">
+                        <i class="fa-solid fa-fire-extinguisher fa-lg mb-2 d-block" style="color:#e65100;"></i>
+                        <div style="font-weight:700;font-size:1.2rem;color:#e65100;">113</div>
+                        <small class="text-muted">Damkar</small>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div style="background:#e3f2fd;border-radius:12px;padding:12px;text-align:center;">
+                        <i class="fa-solid fa-life-ring fa-lg mb-2 d-block" style="color:#1565c0;"></i>
+                        <div style="font-weight:700;font-size:1.2rem;color:#1565c0;">115</div>
+                        <small class="text-muted">SAR</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHECKLIST MINGGUAN -->
+    <section class="section" id="checklist" style="background: white;">
+        <h2 class="section-title"><i class="fa-solid fa-clipboard-check me-2"></i>Checklist Mingguan</h2>
+        <p class="section-desc">Template checklist yang wajib diisi setiap minggu oleh petugas piket</p>
+
+        <div class="info-card">
+            <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-temperature-half"></i></div>1. Kondisi Greenhouse</div>
+            <div class="ckl-group">
+                <div class="ckl-item"><div class="ckl-box"></div><span>Suhu greenhouse dalam rentang normal (25°C — 35°C)</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Kelembaban udara sesuai kebutuhan tanaman</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Ventilasi/sirkulasi udara berfungsi baik</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Struktur bangunan (atap, dinding, pintu) tidak rusak</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Sistem irigasi/penyiraman berfungsi normal</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada genangan air di lantai</span></div>
+            </div>
+        </div>
+
+        <div class="info-card pink">
+            <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-list-check"></i></div>2. Kepatuhan Prosedur Praktik</div>
+            <div class="ckl-group">
+                <div class="ckl-item"><div class="ckl-box"></div><span>APD (Alat Pelindung Diri) lengkap digunakan</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Area kerja dibersihkan sebelum & sesudah aktivitas</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Penyiraman tanaman dilakukan sesuai jadwal</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Ventilasi/sirkulasi udara diperiksa</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Suhu & kelembaban greenhouse dicek dan dicatat</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Pestisida/pupuk digunakan sesuai prosedur</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Sampah dibuang pada tempatnya</span></div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-toolbox"></i></div>3. Kelengkapan Alat</div>
+            <div class="ckl-group">
+                <div class="ckl-item"><div class="ckl-box"></div><span>Cangkul tersedia dan dalam kondisi baik</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Selang air tersedia dan tidak bocor</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Ember/gayung tersedia</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Gunting tanaman tersedia</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Sprayer pestisida berfungsi baik</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Sarung tangan, masker, & sepatu boots tersedia</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Kotak P3K lengkap dan mudah dijangkau</span></div>
+            </div>
+            <div style="background:var(--pink-light);border-radius:10px;padding:12px;margin-top:12px;">
+                <small style="color:var(--pink-dark);"><i class="fa-solid fa-circle-info me-1"></i><b>Jika ada barang hilang/rusak</b>, catat nama barang dan laporkan ke koordinator segera.</small>
+            </div>
+        </div>
+
+        <div class="info-card warning">
+            <div class="card-header-title"><div class="card-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>4. Kerusakan / Kecelakaan Minggu Ini</div>
+            <div class="ckl-group">
+                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada kerusakan pada struktur greenhouse</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada kecelakaan kerja selama 1 minggu</span></div>
+                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada kehilangan barang/alat</span></div>
+            </div>
+            <div style="background:#fff8e1;border-radius:10px;padding:16px;margin-top:14px;">
+                <small style="color:#e65100;font-weight:600;"><i class="fa-solid fa-pen me-1"></i>Jika ada kecelakaan/kerusakan, jelaskan di bawah ini:</small>
+                <div style="margin-top:10px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
+                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
+                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
+                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
+                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print me-2"></i>Cetak Checklist</button>
+        </div>
+    </section>
+
+    <!-- JADWAL PIKET -->
+    <section class="section" id="jadwal">
+        <h2 class="section-title"><i class="fa-solid fa-calendar-days me-2"></i>Jadwal Piket Mingguan</h2>
+        <p class="section-desc">Pembagian jadwal piket greenhouse KWT Agro Tanjung</p>
+
+        <div class="jadwal-wrap">
+            <table class="jadwal-table">
+                <thead>
+                    <tr><th>Hari</th><th>Nama Petugas</th><th>Waktu</th><th>Tugas</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="hari-badge weekday">Senin</span></td><td><b>RT 6</b></td><td>16.00 s.d selesai</td><td>Penyiraman & pengecekan</td></tr>
+                    <tr><td><span class="hari-badge weekday">Selasa</span></td><td><b>RT 1</b></td><td>16.00 s.d selesai</td><td>Pemupukan & perawatan</td></tr>
+                    <tr><td><span class="hari-badge weekday">Rabu</span></td><td><b>RT 5</b></td><td>16.00 s.d selesai</td><td>Penyiraman & pembersihan</td></tr>
+                    <tr><td><span class="hari-badge weekday">Kamis</span></td><td><b>RT 2</b></td><td>16.00 s.d selesai</td><td>Pengecekan hama & penyakit</td></tr>
+                    <tr><td><span class="hari-badge weekday">Jumat</span></td><td><b>RT 4</b></td><td>16.00 s.d selesai</td><td>Penyiraman & inventaris alat</td></tr>
+                    <tr><td><span class="hari-badge weekend">Sabtu</span></td><td><b>RT 3</b></td><td>16.00 s.d selesai</td><td>Pembersihan & penyiraman</td></tr>
+                    <tr><td><span class="hari-badge weekend">Minggu</span></td><td><b>Pengurus KWT</b></td><td>16.00 s.d selesai</td><td>Pengecekan kondisi umum</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="background:var(--green-light);border-radius:12px;padding:14px;margin-top:15px;text-align:center;">
+            <small style="color:var(--green-dark);"><i class="fa-solid fa-circle-info me-1"></i>Jadwal dapat berubah sesuai keputusan koordinator. Hubungi pengurus untuk info terbaru.</small>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p><i class="fa-solid fa-leaf me-1"></i> KWT Agro Tanjung — Keselamatan & Kesehatan Kerja Greenhouse</p>
+        <p style="font-size:0.75rem;margin-top:5px;opacity:0.6;">© 2026 Panduan K3 Digital</p>
+    </footer>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <div class="bottom-nav">
+        <a href="#hero" class="active"><i class="fa-solid fa-house"></i>Beranda</a>
+        <a href="#prosedur"><i class="fa-solid fa-clipboard-list"></i>Prosedur</a>
+        <a href="#mitigasi"><i class="fa-solid fa-triangle-exclamation"></i>Mitigasi</a>
+        <a href="#checklist"><i class="fa-solid fa-clipboard-check"></i>Checklist</a>
+        <a href="#jadwal"><i class="fa-solid fa-calendar-days"></i>Jadwal</a>
+    </div>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update active nav
+                document.querySelectorAll('.bottom-nav a, .nav-links a').forEach(n => n.classList.remove('active'));
+                document.querySelectorAll(`a[href="${a.getAttribute('href')}"]`).forEach(n => n.classList.add('active'));
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+            // Update active section on scroll
+            const sections = ['hero','prosedur','hak-kewajiban','mitigasi','checklist','jadwal'];
+            let current = '';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= 150) current = id;
+            });
+            if (current) {
+                document.querySelectorAll('.bottom-nav a').forEach(n => {
+                    n.classList.toggle('active', n.getAttribute('href') === '#' + current);
+                });
+            }
+        });
+
+        // Scroll animation (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.info-card').forEach(c => observer.observe(c));
+        });
+    </script>
+</body>
+</html>
