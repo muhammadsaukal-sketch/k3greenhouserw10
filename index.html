@@ -185,23 +185,8 @@
         </div>
     </div>
 
-    <!-- 1. LOGIN SCREEN -->
-    <div id="login-screen" class="login-wrapper">
-        <div class="login-card">
-            <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="login-logo">
-            <h2>K3 <span>Greenhouse</span></h2>
-            <p>Sistem Informasi & Checklist Keselamatan Kerja KWT Agro Tanjung</p>
-            
-            <form id="form-login">
-                <input type="text" id="login-username" class="form-control-kwt" placeholder="Username (misal: admin)" required autocomplete="username">
-                <input type="password" id="login-password" class="form-control-kwt" placeholder="Password (misal: kwtk3admin)" required autocomplete="current-password">
-                <button type="submit" class="btn-kwt">Masuk Aplikasi</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- 2. MAIN APP SCREEN -->
-    <div id="app-screen" style="display:none;">
+    <!-- MAIN APP SCREEN -->
+    <div id="app-screen">
         
         <!-- NAVBAR -->
         <nav class="navbar-k3" id="navbar">
@@ -216,7 +201,6 @@
                     <a href="#mitigasi">Mitigasi</a>
                     <a href="#checklist">Checklist</a>
                     <a href="#jadwal">Jadwal</a>
-                    <a href="#" class="btn-logout" onclick="logout()">Logout</a>
                 </div>
             </div>
         </nav>
@@ -533,10 +517,10 @@
         // ====================================================================
         // LOGIC APLIKASI
         // ====================================================================
-        let currentUser = null;
 
-        // Auto-fill tanggal hari ini
+        // Inisialisasi saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
+            // Auto-fill tanggal hari ini
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -544,58 +528,8 @@
             const dateInput = document.getElementById('inp-tanggal');
             if (dateInput) dateInput.value = `${yyyy}-${mm}-${dd}`;
 
-            const storedUser = sessionStorage.getItem('kwtK3User');
-            if (storedUser) {
-                currentUser = JSON.parse(storedUser);
-                showAppScreen();
-            }
-        });
-
-        function showAppScreen() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-screen').style.display = 'block';
-            // Auto-fill nama jika sudah login
-            const namaInput = document.getElementById('inp-nama');
-            if (namaInput && currentUser && currentUser.username) {
-                namaInput.value = currentUser.username;
-            }
+            // Langsung ambil data dari sheets tanpa login
             loadDataDariSheets();
-        }
-
-        function logout() {
-            sessionStorage.removeItem('kwtK3User');
-            location.reload();
-        }
-
-        // Proses Login
-        document.getElementById('form-login').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (APPS_SCRIPT_URL === "PASTE_LINK_APPS_SCRIPT_ANDA_DISINI") {
-                alert("Anda belum memasukkan APPS_SCRIPT_URL di dalam kode HTML!");
-                return;
-            }
-            const u = document.getElementById('login-username').value.trim();
-            const p = document.getElementById('login-password').value.trim();
-
-            showLoader(true, 'Verifikasi akun...');
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'login', username: u, password: p })
-                });
-                const result = await response.json();
-                if (result.status) {
-                    showToast('Login berhasil!');
-                    currentUser = result.data;
-                    sessionStorage.setItem('kwtK3User', JSON.stringify(currentUser));
-                    showAppScreen();
-                } else {
-                    showToast(result.message, true);
-                }
-            } catch (err) {
-                showToast('Gagal terhubung ke server. Periksa koneksi internet.', true);
-            }
-            showLoader(false);
         });
 
         // Ambil data dari Sheets
@@ -675,8 +609,7 @@
                     document.getElementById('form-checklist').reset();
                     document.getElementById('inp-barang-hilang').style.display = 'none';
                     document.getElementById('inp-detail-kerusakan').style.display = 'none';
-                    // Re-fill nama & tanggal
-                    if (currentUser) document.getElementById('inp-nama').value = currentUser.username;
+                    // Re-fill tanggal ke hari ini
                     const today = new Date();
                     document.getElementById('inp-tanggal').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
                     // Scroll ke atas form
