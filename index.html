@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K3 Greenhouse — KWT Agro Tanjung</title>
-    <meta name="description" content="Panduan K3, Prosedur Piket, dan Checklist Greenhouse KWT Agro Tanjung">
+    <title>Sistem K3 Greenhouse — KWT Agro Tanjung</title>
+    <meta name="description" content="Sistem Informasi dan Checklist K3 Greenhouse KWT Agro Tanjung">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,6 +17,33 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); font-family: 'Outfit', sans-serif; color: #333; }
 
+        /* LOADING OVERLAY */
+        #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .spinner { width: 50px; height: 50px; border: 5px solid var(--green-light); border-top: 5px solid var(--green); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loader-overlay p { margin-top: 15px; font-weight: 600; color: var(--green-dark); }
+
+        /* TOAST */
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .toast-kwt { background: white; border-left: 5px solid var(--green); box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 15px 25px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; transform: translateX(120%); transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); font-weight: 500; }
+        .toast-kwt.show { transform: translateX(0); }
+        .toast-kwt.error { border-left-color: #ef5350; }
+        .toast-kwt i { font-size: 1.2rem; }
+        .toast-kwt.error i { color: #ef5350; }
+        .toast-kwt:not(.error) i { color: var(--green); }
+
+        /* LOGIN SCREEN */
+        .login-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--green-light) 0%, #fff 50%, var(--pink-light) 100%); padding: 20px; }
+        .login-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
+        .login-logo { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--green); margin-bottom: 20px; }
+        .login-card h2 { font-weight: 800; color: var(--green-darker); margin-bottom: 5px; }
+        .login-card h2 span { color: var(--pink-dark); }
+        .login-card p { color: #777; font-size: 0.9rem; margin-bottom: 30px; }
+        .form-control-kwt { width: 100%; padding: 14px 20px; border: 2px solid #eee; border-radius: 14px; margin-bottom: 15px; font-family: 'Outfit', sans-serif; transition: 0.3s; outline: none; background: #fdfdfd; }
+        .form-control-kwt:focus { border-color: var(--green); background: white; box-shadow: 0 0 0 4px var(--green-light); }
+        .btn-kwt { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white; border: none; border-radius: 14px; font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(102,187,106,0.3); }
+        .btn-kwt:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,187,106,0.4); }
+
         /* NAVBAR */
         .navbar-k3 { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 20px rgba(0,0,0,0.06); padding: 12px 0; position: fixed; top: 0; width: 100%; z-index: 1000; transition: 0.3s; }
         .navbar-k3.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.1); }
@@ -24,14 +51,14 @@
         .nav-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
         .nav-title { font-weight: 700; font-size: 1rem; color: var(--green-darker); }
         .nav-title span { color: var(--pink-dark); }
-        .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+        .nav-links { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
         .nav-links a { text-decoration: none; font-size: 0.78rem; padding: 5px 12px; border-radius: 20px; color: #666; font-weight: 500; transition: 0.3s; }
         .nav-links a:hover, .nav-links a.active { background: var(--green-light); color: var(--green-dark); }
+        .btn-logout { background: #ffebee; color: #d32f2f !important; border: 1px solid #ffcdd2; margin-left: 10px; }
+        .btn-logout:hover { background: #ffcdd2 !important; color: #c62828 !important; }
 
         /* HERO */
         .hero { min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, var(--green-light) 0%, #fff 40%, var(--pink-light) 100%); padding: 120px 20px 60px; position: relative; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: -40%; right: -15%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(244,143,177,0.08) 0%, transparent 70%); border-radius: 50%; }
-        .hero::after { content: ''; position: absolute; bottom: -35%; left: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(102,187,106,0.08) 0%, transparent 70%); border-radius: 50%; }
         .hero-content { position: relative; z-index: 1; }
         .hero-logo { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 8px 40px rgba(56,142,60,0.2); margin-bottom: 22px; animation: floatLogo 3s ease-in-out infinite; background: white; }
         @keyframes floatLogo { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -49,10 +76,8 @@
         .section-desc { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 35px; }
 
         /* CARDS */
-        .info-card { background: white; border-radius: 18px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-left: 5px solid var(--green); transition: 0.4s; opacity: 0; transform: translateY(25px); }
-        .info-card.visible { opacity: 1; transform: translateY(0); }
-        .info-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
-        .info-card.visible:hover { transform: translateY(-3px); }
+        .info-card { background: white; border-radius: 18px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border-left: 5px solid var(--green); transition: 0.4s; }
+        .info-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
         .info-card.pink { border-left-color: var(--pink); }
         .info-card.warning { border-left-color: #ff9800; }
         .info-card.red { border-left-color: #e53935; }
@@ -62,46 +87,72 @@
         .card-icon.pink { background: linear-gradient(135deg, var(--pink), var(--pink-dark)); }
         .card-icon.orange { background: linear-gradient(135deg, #ffa726, #f57c00); }
         .card-icon.red { background: linear-gradient(135deg, #ef5350, #c62828); }
-        .info-card ol, .info-card ul { padding-left: 20px; margin: 0; }
+        .info-card ul { padding-left: 20px; margin: 0; }
         .info-card li { margin-bottom: 8px; font-size: 0.9rem; color: #444; line-height: 1.6; }
 
-        /* CHECKLIST TEMPLATE */
+        /* CHECKLIST FORM TEMPLATE */
         .ckl-group { background: #fafafa; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-        .ckl-group h6 { font-weight: 700; font-size: 0.88rem; margin-bottom: 10px; color: var(--green-dark); }
-        .ckl-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.88rem; }
+        .ckl-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 8px; border-bottom: 1px dashed #e0e0e0; font-size: 0.9rem; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
         .ckl-item:last-child { border: none; }
-        .ckl-box { width: 20px; height: 20px; border: 2px solid #ccc; border-radius: 4px; flex-shrink: 0; }
+        .ckl-item:active { background: var(--green-light); border-radius: 8px; }
+        .ckl-item span { flex: 1; line-height: 1.5; padding-top: 1px; }
+        .form-check-input { width: 24px; height: 24px; min-width: 24px; min-height: 24px; border: 2px solid #bbb; border-radius: 6px; cursor: pointer; margin-top: 0; flex-shrink: 0; appearance: none; -webkit-appearance: none; background: white; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .form-check-input:checked { background-color: var(--green); border-color: var(--green); }
+        .form-check-input:checked::after { content: '✓'; color: white; font-size: 14px; font-weight: 700; }
+        .ckl-select { width: 100%; padding: 14px 16px; border: 2px solid #ddd; border-radius: 12px; font-family: 'Outfit'; outline: none; font-size: 0.9rem; background: white; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; cursor: pointer; }
+        .ckl-select:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
+        .ckl-textarea { width: 100%; padding: 14px 16px; border: 2px solid #ddd; border-radius: 12px; font-family: 'Outfit'; outline: none; font-size: 0.9rem; min-height: 100px; resize: vertical; margin-top: 10px; display: none; }
+        .ckl-textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
+        .ckl-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+        .ckl-input { width: 100%; padding: 14px 16px; border: 2px solid #ddd; border-radius: 12px; font-family: 'Outfit'; outline: none; font-size: 0.9rem; background: white; }
+        .ckl-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-light); }
+        .ckl-label { font-size: 0.82rem; font-weight: 600; color: #666; margin-bottom: 6px; display: block; }
+        .btn-kwt:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+        /* CONFIRM MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9998; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: white; border-radius: 20px; padding: 30px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+        .modal-box h3 { font-weight: 700; color: var(--green-darker); margin-bottom: 10px; }
+        .modal-box p { color: #666; font-size: 0.9rem; margin-bottom: 25px; }
+        .modal-btns { display: flex; gap: 12px; }
+        .modal-btns button { flex: 1; padding: 12px; border-radius: 12px; font-family: 'Outfit'; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; }
+        .modal-btn-cancel { background: #f5f5f5; color: #666; }
+        .modal-btn-cancel:hover { background: #eee; }
+        .modal-btn-confirm { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white; }
 
         /* JADWAL TABLE */
         .jadwal-wrap { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
         .jadwal-table { width: 100%; border-collapse: collapse; }
-        .jadwal-table th { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white; padding: 12px 16px; font-size: 0.82rem; font-weight: 600; text-align: center; }
-        .jadwal-table td { padding: 12px 16px; font-size: 0.88rem; text-align: center; border-bottom: 1px solid #f0f0f0; background: white; }
+        .jadwal-table th { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white; padding: 12px 16px; font-size: 0.85rem; font-weight: 600; text-align: center; }
+        .jadwal-table td { padding: 12px 16px; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #f0f0f0; background: white; }
         .jadwal-table tr:nth-child(even) td { background: #fafafa; }
         .jadwal-table tr:hover td { background: var(--green-light); }
-        .hari-badge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; }
+        .hari-badge { display: inline-block; padding: 4px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
         .hari-badge.weekday { background: var(--green-light); color: var(--green-dark); }
         .hari-badge.weekend { background: var(--pink-light); color: var(--pink-dark); }
 
         /* FOOTER */
         .footer { background: linear-gradient(135deg, var(--green-darker), var(--green-dark)); color: white; text-align: center; padding: 35px 20px; }
-        .footer p { font-size: 0.85rem; opacity: 0.8; }
-
-        /* PRINT BUTTON */
-        .btn-print { background: white; border: 2px solid var(--green); color: var(--green-dark); padding: 10px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Outfit', sans-serif; }
-        .btn-print:hover { background: var(--green); color: white; }
-
+        
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .hero h1 { font-size: 1.5rem; }
             .hero-logo { width: 100px; height: 100px; }
-            .section { padding: 40px 16px; }
-            .section-title { font-size: 1.25rem; }
             .nav-links { display: none; }
             .jadwal-table th, .jadwal-table td { padding: 8px 6px; font-size: 0.78rem; }
+            .section { padding: 40px 16px; }
+            .info-card { padding: 18px 16px; border-radius: 14px; }
+            .ckl-select { font-size: 0.85rem; padding: 12px 14px; }
+            .ckl-textarea { font-size: 0.85rem; padding: 12px 14px; min-height: 80px; }
+            .ckl-input { font-size: 0.85rem; padding: 12px 14px; }
+            .ckl-input-row { grid-template-columns: 1fr; gap: 8px; }
+            .ckl-item { padding: 10px 6px; font-size: 0.85rem; gap: 10px; }
+            .card-header-title { font-size: 0.95rem; }
+            .modal-box { padding: 24px 20px; }
+            .modal-btns { flex-direction: column; }
         }
 
-        /* MOBILE BOTTOM NAV (only show on small screens) */
+        /* MOBILE BOTTOM NAV */
         .bottom-nav { display: none; }
         @media (max-width: 768px) {
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); justify-content: space-around; padding: 10px 0 16px; z-index: 1000; border-top-left-radius: 22px; border-top-right-radius: 22px; }
@@ -110,332 +161,549 @@
             .bottom-nav a.active { color: var(--green-dark); }
             .footer { margin-bottom: 70px; }
         }
-
-        @media print {
-            .navbar-k3, .bottom-nav, .btn-print, .footer { display: none !important; }
-            .hero { min-height: auto; padding: 20px; }
-            .info-card { opacity: 1 !important; transform: none !important; break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
-            .section { padding: 20px 0; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar-k3" id="navbar">
-        <div class="container d-flex align-items-center justify-content-between">
-            <a class="nav-brand" href="#">
-                <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="nav-logo">
-                <div class="nav-title">K3 <span>Greenhouse</span></div>
-            </a>
-            <div class="nav-links">
-                <a href="#prosedur">Prosedur</a>
-                <a href="#hak-kewajiban">Hak & Kewajiban</a>
-                <a href="#mitigasi">Mitigasi</a>
-                <a href="#checklist">Checklist</a>
-                <a href="#jadwal">Jadwal</a>
+    <!-- OVERLAYS -->
+    <div id="loader-overlay">
+        <div class="spinner"></div>
+        <p id="loader-text">Memproses...</p>
+    </div>
+    <div id="toast-container"></div>
+
+    <!-- CONFIRM MODAL -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-box">
+            <i class="fa-solid fa-paper-plane" style="font-size:2.5rem; color:var(--green); margin-bottom:15px;"></i>
+            <h3>Kirim Checklist?</h3>
+            <p>Data checklist akan dikirim dan disimpan ke Google Sheets. Pastikan semua isian sudah benar.</p>
+            <div class="modal-btns">
+                <button class="modal-btn-cancel" onclick="closeConfirmModal()">Batal</button>
+                <button class="modal-btn-confirm" onclick="submitChecklist()"><i class="fa-solid fa-check me-1"></i>Ya, Kirim</button>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- HERO -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="hero-logo">
-            <h1>K3 <span>Greenhouse</span></h1>
-            <p class="subtitle">KWT Agro Tanjung — Panduan Keselamatan & Kesehatan Kerja</p>
-            <div class="hero-badges">
-                <div class="hero-badge green"><i class="fa-solid fa-shield-halved me-1"></i>Keselamatan</div>
-                <div class="hero-badge pink"><i class="fa-solid fa-heart me-1"></i>Kesehatan</div>
-                <div class="hero-badge green"><i class="fa-solid fa-leaf me-1"></i>Greenhouse</div>
-            </div>
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen" class="login-wrapper">
+        <div class="login-card">
+            <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="login-logo">
+            <h2>K3 <span>Greenhouse</span></h2>
+            <p>Sistem Informasi & Checklist Keselamatan Kerja KWT Agro Tanjung</p>
+            
+            <form id="form-login">
+                <input type="text" id="login-username" class="form-control-kwt" placeholder="Username (misal: admin)" required autocomplete="username">
+                <input type="password" id="login-password" class="form-control-kwt" placeholder="Password (misal: kwtk3admin)" required autocomplete="current-password">
+                <button type="submit" class="btn-kwt">Masuk Aplikasi</button>
+            </form>
         </div>
-    </section>
+    </div>
 
-    <!-- PROSEDUR PIKET -->
-    <section class="section" id="prosedur">
-        <h2 class="section-title"><i class="fa-solid fa-clipboard-list me-2"></i>Prosedur Piket</h2>
-        <p class="section-desc">Panduan langkah-langkah keselamatan kerja selama piket greenhouse</p>
+    <!-- 2. MAIN APP SCREEN -->
+    <div id="app-screen" style="display:none;">
+        
+        <!-- NAVBAR -->
+        <nav class="navbar-k3" id="navbar">
+            <div class="container d-flex align-items-center justify-content-between">
+                <a class="nav-brand" href="#">
+                    <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="nav-logo">
+                    <div class="nav-title">K3 <span>Greenhouse</span></div>
+                </a>
+                <div class="nav-links">
+                    <a href="#prosedur">Prosedur</a>
+                    <a href="#hak-kewajiban">Hak & Kewajiban</a>
+                    <a href="#mitigasi">Mitigasi</a>
+                    <a href="#checklist">Checklist</a>
+                    <a href="#jadwal">Jadwal</a>
+                    <a href="#" class="btn-logout" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </nav>
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0">
-                    <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-hourglass-start"></i></div>Sebelum Piket</div>
-                    <ul>
-                        <li>Pastikan kondisi tubuh sehat (tidak demam, pusing, atau kelelahan berat).</li>
-                        <li>Gunakan pakaian tertutup dan alas kaki yang tidak licin.</li>
-                        <li>Konfirmasi jadwal ke koordinator RT yang bertugas hari itu.</li>
-                    </ul>
+        <!-- HERO -->
+        <section class="hero" id="hero">
+            <div class="hero-content">
+                <img src="https://lh3.googleusercontent.com/d/1Eu4WY5lNakk3bcZN4P-gQdpwJLo7UpyZ" alt="Logo KWT" class="hero-logo">
+                <h1>K3 <span>Greenhouse</span></h1>
+                <p class="subtitle">KWT Agro Tanjung — Panduan Keselamatan & Kesehatan Kerja</p>
+                <div class="hero-badges">
+                    <div class="hero-badge green"><i class="fa-solid fa-shield-halved me-1"></i>Keselamatan</div>
+                    <div class="hero-badge pink"><i class="fa-solid fa-heart me-1"></i>Kesehatan</div>
+                    <div class="hero-badge green"><i class="fa-solid fa-leaf me-1"></i>Greenhouse</div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="info-card pink h-100 mb-0">
-                    <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-spinner"></i></div>Selama Piket</div>
-                    <ul>
-                        <li>Bila memungkinkan, piket dilakukan minimal berdua (buddy system), terutama menjelang senja.</li>
-                        <li>Siram tanaman sesuai arah/urutan yang telah ditentukan agar tidak ada yang terlewat atau diulang.</li>
-                        <li>Catat kehadiran dan kondisi greenhouse di barcode piket.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card warning h-100 mb-0">
-                    <div class="card-header-title"><div class="card-icon orange"><i class="fa-solid fa-check-double"></i></div>Setelah Piket</div>
-                    <ul>
-                        <li>Bersihkan dan simpan alat pada tempatnya.</li>
-                        <li>Pastikan pintu/gerbang greenhouse terkunci.</li>
-                        <li>Laporkan kejadian tidak biasa (kerusakan, hama, kecelakaan kecil) ke koordinator RT berikutnya atau pengurus KWT.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0" style="border-left-color: #1565c0;">
-                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #1976d2, #0d47a1);"><i class="fa-solid fa-bullhorn"></i></div>Mekanisme Penyampaian Keluhan</div>
-                    <p style="font-size:0.9rem; color:#444; line-height:1.6; margin:0;">Keluhan atau usulan terkait keselamatan disampaikan kepada koordinator RT atau langsung ke pengurus KWT, baik secara lisan maupun tertulis melalui website piket, untuk dibahas dalam pertemuan rutin KWT.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- HAK & KEWAJIBAN -->
-    <section class="section" id="hak-kewajiban" style="background: white;">
-        <h2 class="section-title"><i class="fa-solid fa-scale-balanced me-2"></i>Hak dan Kewajiban Anggota</h2>
-        <p class="section-desc">Hak dan kewajiban terkait keselamatan kerja anggota KWT</p>
+        <!-- PROSEDUR PIKET -->
+        <section class="section" id="prosedur">
+            <h2 class="section-title"><i class="fa-solid fa-clipboard-list me-2"></i>Prosedur Piket</h2>
+            <p class="section-desc">Panduan langkah-langkah keselamatan kerja selama piket greenhouse</p>
 
-        <div class="info-card">
-            <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-hand-holding-heart"></i></div>Hak Anggota</div>
-            <ul>
-                <li>Mendapat informasi risiko dan cara kerja aman sebelum piket pertama.</li>
-                <li>Menolak atau menunda piket jika kondisi kesehatan tidak memungkinkan atau cuaca ekstrem (hujan deras, panas berlebih).</li>
-                <li>Mendapat pertolongan pertama dan bantuan dari sesama anggota bila terjadi kecelakaan saat piket.</li>
-                <li>Menyampaikan keluhan atau usulan perbaikan prosedur keselamatan kepada pengurus KWT.</li>
-            </ul>
-        </div>
-
-        <div class="info-card pink">
-            <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-clipboard-user"></i></div>Kewajiban Anggota</div>
-            <ul>
-                <li>Mengikuti jadwal piket sesuai giliran RT.</li>
-                <li>Mematuhi prosedur kerja dan penggunaan alat yang telah ditetapkan.</li>
-                <li>Melaporkan kerusakan fasilitas atau potensi bahaya yang ditemukan di greenhouse.</li>
-                <li>Menjaga kebersihan dan kerapian greenhouse setelah piket.</li>
-                <li>Tidak menggunakan alat di luar fungsinya dan tidak membiarkan alat tajam/berbahaya tergeletak sembarangan.</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- MITIGASI KECELAKAAN -->
-    <section class="section" id="mitigasi">
-        <h2 class="section-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Mitigasi Kecelakaan Pada Greenhouse</h2>
-        <p class="section-desc">Pencegahan dan penanganan risiko kecelakaan di area greenhouse</p>
-
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0" style="border-left-color: #5d4037;">
-                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #795548, #3e2723);"><i class="fa-solid fa-person-falling"></i></div>Terpeleset / Tersandung</div>
-                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> lantai basah bekas siram, selang yang berserakan.</p>
-                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> gunakan alas kaki anti-slip, rapikan selang setelah dipakai, beri tanda area basah bila perlu.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0">
-                    <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-person-walking-with-cane"></i></div>Cedera Otot atau Postur</div>
-                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> mengangkat pot, karung pupuk, atau alat berat dengan posisi salah.</p>
-                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> angkat dengan menekuk lutut (bukan membungkuk), minta bantuan jika beban berat, jangan memaksakan diri.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0" style="border-left-color: #00897b;">
-                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #26a69a, #004d40);"><i class="fa-solid fa-bug"></i></div>Gigitan / Sengatan Serangga</div>
-                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> greenhouse lembap sering jadi tempat serangga, laba-laba, atau ular kecil bersembunyi.</p>
-                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> gunakan sarung tangan dan sepatu tertutup, periksa sela-sela rak/pot sebelum menyentuh langsung.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0" style="border-left-color: #6a1b9a;">
-                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #ab47bc, #4a148c);"><i class="fa-solid fa-flask"></i></div>Paparan Bahan Kimia</div>
-                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> kontak langsung tanpa pelindung saat mencampur atau mengaplikasikan pupuk/pestisida.</p>
-                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> gunakan sarung tangan dan masker saat menangani bahan kimia, simpan bahan di tempat terpisah dan tertutup, cuci tangan setelah piket.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0" style="border-left-color: #424242;">
-                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #757575, #212121);"><i class="fa-solid fa-scissors"></i></div>Luka Akibat Alat Tajam</div>
-                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> gunting kebun, sekop, atau pisau potong yang digunakan sembarangan atau tersimpan tidak rapi.</p>
-                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> simpan alat tajam di tempat khusus, gunakan sesuai fungsi, sediakan kotak P3K sederhana di greenhouse.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="info-card h-100 mb-0" style="border-left-color: #c0ca33;">
-                    <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #d4e157, #827717);"><i class="fa-solid fa-house-crack"></i></div>Kerusakan Struktur</div>
-                    <p style="font-size:0.9rem; color:#444; margin-bottom:8px;"><b>Penyebab:</b> atap plastik/terpal robek, rangka bambu/besi lapuk yang bisa roboh atau melukai.</p>
-                    <p style="font-size:0.9rem; color:#444; margin:0;"><b>Mitigasi:</b> cek kondisi struktur secara berkala, laporkan segera jika ada bagian yang rusak atau berbahaya, jangan berdiri/berlindung di bawah bagian yang tampak rapuh.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="info-card red mt-4">
-            <div class="card-header-title"><div class="card-icon red"><i class="fa-solid fa-phone"></i></div>Kontak Darurat</div>
-            <div class="row g-3">
-                <div class="col-6 col-md-3">
-                    <div style="background:var(--pink-light);border-radius:12px;padding:12px;text-align:center;">
-                        <i class="fa-solid fa-phone fa-lg mb-2 d-block" style="color:var(--pink-dark);"></i>
-                        <div style="font-weight:700;font-size:1.2rem;color:var(--pink-dark);">112</div>
-                        <small class="text-muted">Darurat Nasional</small>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="info-card h-100 mb-0">
+                        <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-hourglass-start"></i></div>Sebelum Piket</div>
+                        <ul>
+                            <li>Pastikan kondisi tubuh sehat (tidak demam, pusing, atau kelelahan berat).</li>
+                            <li>Gunakan pakaian tertutup dan alas kaki yang tidak licin.</li>
+                            <li>Konfirmasi jadwal ke koordinator RT yang bertugas hari itu.</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div style="background:var(--green-light);border-radius:12px;padding:12px;text-align:center;">
-                        <i class="fa-solid fa-truck-medical fa-lg mb-2 d-block" style="color:var(--green-dark);"></i>
-                        <div style="font-weight:700;font-size:1.2rem;color:var(--green-dark);">119</div>
-                        <small class="text-muted">Ambulans</small>
+                <div class="col-md-6">
+                    <div class="info-card pink h-100 mb-0">
+                        <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-spinner"></i></div>Selama Piket</div>
+                        <ul>
+                            <li>Bila memungkinkan, piket dilakukan minimal berdua (buddy system), terutama menjelang senja.</li>
+                            <li>Siram tanaman sesuai arah/urutan yang telah ditentukan agar tidak ada yang terlewat atau diulang.</li>
+                            <li>Catat kehadiran dan kondisi greenhouse di barcode piket.</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div style="background:#fff3e0;border-radius:12px;padding:12px;text-align:center;">
-                        <i class="fa-solid fa-fire-extinguisher fa-lg mb-2 d-block" style="color:#e65100;"></i>
-                        <div style="font-weight:700;font-size:1.2rem;color:#e65100;">113</div>
-                        <small class="text-muted">Damkar</small>
+                <div class="col-md-6">
+                    <div class="info-card warning h-100 mb-0">
+                        <div class="card-header-title"><div class="card-icon orange"><i class="fa-solid fa-check-double"></i></div>Setelah Piket</div>
+                        <ul>
+                            <li>Bersihkan dan simpan alat pada tempatnya.</li>
+                            <li>Pastikan pintu/gerbang greenhouse terkunci.</li>
+                            <li>Laporkan kejadian tidak biasa (kerusakan, hama, kecelakaan kecil) ke koordinator RT berikutnya atau pengurus KWT.</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <div style="background:#e3f2fd;border-radius:12px;padding:12px;text-align:center;">
-                        <i class="fa-solid fa-life-ring fa-lg mb-2 d-block" style="color:#1565c0;"></i>
-                        <div style="font-weight:700;font-size:1.2rem;color:#1565c0;">115</div>
-                        <small class="text-muted">SAR</small>
+                <div class="col-md-6">
+                    <div class="info-card h-100 mb-0" style="border-left-color: #1565c0;">
+                        <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #1976d2, #0d47a1);"><i class="fa-solid fa-bullhorn"></i></div>Mekanisme Penyampaian Keluhan</div>
+                        <p style="font-size:0.9rem; color:#444; line-height:1.6; margin:0;">Keluhan atau usulan terkait keselamatan disampaikan kepada koordinator RT atau langsung ke pengurus KWT, baik secara lisan maupun tertulis melalui website piket, untuk dibahas dalam pertemuan rutin KWT.</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CHECKLIST MINGGUAN -->
-    <section class="section" id="checklist" style="background: white;">
-        <h2 class="section-title"><i class="fa-solid fa-clipboard-check me-2"></i>Checklist Mingguan</h2>
-        <p class="section-desc">Template checklist yang wajib diisi setiap minggu oleh petugas piket</p>
-
-        <div class="info-card">
-            <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-temperature-half"></i></div>1. Kondisi Greenhouse</div>
-            <div class="ckl-group">
-                <div class="ckl-item"><div class="ckl-box"></div><span>Suhu greenhouse dalam rentang normal (25°C — 35°C)</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Kelembaban udara sesuai kebutuhan tanaman</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Ventilasi/sirkulasi udara berfungsi baik</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Struktur bangunan (atap, dinding, pintu) tidak rusak</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Sistem irigasi/penyiraman berfungsi normal</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada genangan air di lantai</span></div>
+        <!-- HAK & KEWAJIBAN -->
+        <section class="section" id="hak-kewajiban" style="background: white;">
+            <h2 class="section-title"><i class="fa-solid fa-scale-balanced me-2"></i>Hak dan Kewajiban</h2>
+            <div class="row g-4 mt-2">
+                <div class="col-md-6">
+                    <div class="info-card h-100 mb-0">
+                        <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-hand-holding-heart"></i></div>Hak Anggota</div>
+                        <ul>
+                            <li>Mendapat informasi risiko dan cara kerja aman.</li>
+                            <li>Menolak/menunda piket jika sakit atau cuaca ekstrem.</li>
+                            <li>Mendapat pertolongan pertama saat kecelakaan.</li>
+                            <li>Menyampaikan keluhan keselamatan ke pengurus.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card pink h-100 mb-0">
+                        <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-clipboard-user"></i></div>Kewajiban Anggota</div>
+                        <ul>
+                            <li>Mengikuti jadwal piket sesuai giliran RT.</li>
+                            <li>Mematuhi prosedur dan penggunaan alat.</li>
+                            <li>Melaporkan kerusakan fasilitas/potensi bahaya.</li>
+                            <li>Menjaga kebersihan greenhouse setelah piket.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="info-card pink">
-            <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-list-check"></i></div>2. Kepatuhan Prosedur Praktik</div>
-            <div class="ckl-group">
-                <div class="ckl-item"><div class="ckl-box"></div><span>APD (Alat Pelindung Diri) lengkap digunakan</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Area kerja dibersihkan sebelum & sesudah aktivitas</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Penyiraman tanaman dilakukan sesuai jadwal</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Ventilasi/sirkulasi udara diperiksa</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Suhu & kelembaban greenhouse dicek dan dicatat</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Pestisida/pupuk digunakan sesuai prosedur</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Sampah dibuang pada tempatnya</span></div>
+        <!-- MITIGASI KECELAKAAN -->
+        <section class="section" id="mitigasi">
+            <h2 class="section-title"><i class="fa-solid fa-triangle-exclamation me-2"></i>Mitigasi Kecelakaan</h2>
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <div class="info-card h-100 mb-0" style="border-left-color: #5d4037;">
+                        <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #795548, #3e2723);"><i class="fa-solid fa-person-falling"></i></div>Terpeleset</div>
+                        <p style="font-size:0.85rem; color:#444;">Gunakan alas kaki anti-slip, rapikan selang setelah dipakai, beri tanda area basah.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card h-100 mb-0">
+                        <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-person-walking-with-cane"></i></div>Cedera Postur</div>
+                        <p style="font-size:0.85rem; color:#444;">Angkat beban berat dengan menekuk lutut (bukan membungkuk), jangan memaksakan diri.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card h-100 mb-0" style="border-left-color: #00897b;">
+                        <div class="card-header-title"><div class="card-icon" style="background: linear-gradient(135deg, #26a69a, #004d40);"><i class="fa-solid fa-bug"></i></div>Gigitan Serangga</div>
+                        <p style="font-size:0.85rem; color:#444;">Gunakan sarung tangan, periksa sela-sela rak/pot sebelum menyentuh langsung.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="info-card">
-            <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-toolbox"></i></div>3. Kelengkapan Alat</div>
-            <div class="ckl-group">
-                <div class="ckl-item"><div class="ckl-box"></div><span>Cangkul tersedia dan dalam kondisi baik</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Selang air tersedia dan tidak bocor</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Ember/gayung tersedia</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Gunting tanaman tersedia</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Sprayer pestisida berfungsi baik</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Sarung tangan, masker, & sepatu boots tersedia</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Kotak P3K lengkap dan mudah dijangkau</span></div>
+            
+            <div class="info-card red mt-4">
+                <div class="card-header-title"><div class="card-icon red"><i class="fa-solid fa-phone"></i></div>Kontak Darurat</div>
+                <div class="row g-3">
+                    <div class="col-6 col-md-3">
+                        <div style="background:var(--pink-light);border-radius:12px;padding:12px;text-align:center;">
+                            <div style="font-weight:700;font-size:1.2rem;color:var(--pink-dark);">112</div>
+                            <small class="text-muted">Darurat Nasional</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div style="background:var(--green-light);border-radius:12px;padding:12px;text-align:center;">
+                            <div style="font-weight:700;font-size:1.2rem;color:var(--green-dark);">119</div>
+                            <small class="text-muted">Ambulans</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div style="background:#fff3e0;border-radius:12px;padding:12px;text-align:center;">
+                            <div style="font-weight:700;font-size:1.2rem;color:#e65100;">113</div>
+                            <small class="text-muted">Damkar</small>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div style="background:#e3f2fd;border-radius:12px;padding:12px;text-align:center;">
+                            <div style="font-weight:700;font-size:1.2rem;color:#1565c0;">115</div>
+                            <small class="text-muted">SAR</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div style="background:var(--pink-light);border-radius:10px;padding:12px;margin-top:12px;">
-                <small style="color:var(--pink-dark);"><i class="fa-solid fa-circle-info me-1"></i><b>Jika ada barang hilang/rusak</b>, catat nama barang dan laporkan ke koordinator segera.</small>
+        </section>
+
+        <!-- CHECKLIST FORM INTERAKTIF -->
+        <section class="section" id="checklist" style="background: white;">
+            <h2 class="section-title"><i class="fa-solid fa-clipboard-check me-2"></i>Form Checklist Mingguan</h2>
+            <p class="section-desc">Mohon diisi oleh petugas piket setiap selesai bertugas.</p>
+
+            <form id="form-checklist" onsubmit="return openConfirmModal(event)">
+                
+                <!-- IDENTITAS PENGISI -->
+                <div class="info-card" style="border-left-color: #1565c0;">
+                    <div class="card-header-title"><div class="card-icon" style="background:linear-gradient(135deg,#1976d2,#0d47a1);"><i class="fa-solid fa-user-pen"></i></div>Identitas Pengisi</div>
+                    <div class="ckl-input-row">
+                        <div>
+                            <span class="ckl-label"><i class="fa-solid fa-user me-1"></i>Nama Pengisi *</span>
+                            <input type="text" id="inp-nama" class="ckl-input" placeholder="Ketik nama Anda..." required>
+                        </div>
+                        <div>
+                            <span class="ckl-label"><i class="fa-solid fa-calendar me-1"></i>Tanggal Piket *</span>
+                            <input type="date" id="inp-tanggal" class="ckl-input" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. KONDISI GREENHOUSE -->
+                <div class="info-card">
+                    <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-temperature-half"></i></div>1. Kondisi Umum Greenhouse</div>
+                    <select id="inp-kondisi" class="ckl-select" required>
+                        <option value="" disabled selected>— Pilih kondisi —</option>
+                        <option value="Baik">✅ Baik (Suhu, kelembaban normal, struktur aman)</option>
+                        <option value="Cukup">⚠️ Cukup (Ada sedikit kendala tapi masih wajar)</option>
+                        <option value="Buruk">❌ Buruk (Ada genangan air, ventilasi rusak, dsb)</option>
+                    </select>
+                </div>
+
+                <!-- 2. KEPATUHAN PROSEDUR -->
+                <div class="info-card pink">
+                    <div class="card-header-title"><div class="card-icon pink"><i class="fa-solid fa-list-check"></i></div>2. Kepatuhan Prosedur Praktik</div>
+                    <p style="font-size:0.82rem; color:#999; margin-bottom:10px;"><i class="fa-solid fa-hand-pointer me-1"></i>Centang semua yang sudah dilakukan:</p>
+                    <div class="ckl-group">
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="APD lengkap"><span>APD (Alat Pelindung Diri) lengkap digunakan</span></label>
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="Area dibersihkan"><span>Area kerja dibersihkan sebelum & sesudah aktivitas</span></label>
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="Penyiraman sesuai jadwal"><span>Penyiraman tanaman dilakukan sesuai jadwal</span></label>
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="Ventilasi diperiksa"><span>Ventilasi / sirkulasi udara diperiksa</span></label>
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="Suhu & kelembaban dicek"><span>Suhu & kelembaban greenhouse dicek dan dicatat</span></label>
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="Pestisida sesuai prosedur"><span>Pestisida/pupuk digunakan sesuai prosedur</span></label>
+                        <label class="ckl-item"><input type="checkbox" class="form-check-input chk-prosedur" value="Sampah dibuang"><span>Sampah dibuang pada tempatnya</span></label>
+                    </div>
+                </div>
+
+                <!-- 3. KELENGKAPAN ALAT -->
+                <div class="info-card">
+                    <div class="card-header-title"><div class="card-icon green"><i class="fa-solid fa-toolbox"></i></div>3. Kelengkapan Alat</div>
+                    <select id="inp-kelengkapan" class="ckl-select" required onchange="toggleInput('inp-kelengkapan', 'Tidak Lengkap', 'inp-barang-hilang')">
+                        <option value="" disabled selected>— Pilih kondisi alat —</option>
+                        <option value="Lengkap">✅ Alat Lengkap & Dalam Kondisi Baik</option>
+                        <option value="Tidak Lengkap">⚠️ Ada Barang yang Hilang / Rusak</option>
+                    </select>
+                    <textarea id="inp-barang-hilang" class="ckl-textarea" placeholder="Sebutkan barang yang hilang atau rusak beserta jumlahnya..."></textarea>
+                </div>
+
+                <!-- 4. LAPORAN KECELAKAAN -->
+                <div class="info-card warning">
+                    <div class="card-header-title"><div class="card-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>4. Laporan Kecelakaan / Kerusakan</div>
+                    <select id="inp-ada-kerusakan" class="ckl-select" required onchange="toggleInput('inp-ada-kerusakan', 'Ya', 'inp-detail-kerusakan')">
+                        <option value="" disabled selected>— Pilih status —</option>
+                        <option value="Tidak">✅ Aman (Tidak ada kerusakan atau kecelakaan)</option>
+                        <option value="Ya">🚨 Terdapat Kerusakan atau Insiden Kecelakaan</option>
+                    </select>
+                    <textarea id="inp-detail-kerusakan" class="ckl-textarea" placeholder="Jelaskan secara singkat kronologi kerusakan atau kecelakaan yang terjadi..."></textarea>
+                </div>
+
+                <!-- CATATAN TAMBAHAN -->
+                <div class="info-card" style="border-left-color: #9e9e9e;">
+                    <div class="card-header-title"><div class="card-icon" style="background:#757575;"><i class="fa-solid fa-note-sticky"></i></div>Catatan Tambahan</div>
+                    <textarea id="inp-catatan" class="ckl-textarea" style="display:block;" placeholder="(Opsional) Catatan lainnya untuk pengurus KWT..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-kwt mt-3" id="btn-submit-ckl" style="font-size:1.05rem;"><i class="fa-solid fa-paper-plane me-2"></i>Kirim Checklist ke Database</button>
+
+            </form>
+        </section>
+
+        <!-- JADWAL PIKET (DARI DATABASE) -->
+        <section class="section" id="jadwal">
+            <h2 class="section-title"><i class="fa-solid fa-calendar-days me-2"></i>Jadwal Piket KWT</h2>
+            <p class="section-desc">Data jadwal di bawah ini dimuat langsung dari Google Sheets.</p>
+
+            <div class="jadwal-wrap">
+                <table class="jadwal-table">
+                    <thead>
+                        <tr><th>Hari</th><th>Nama Petugas</th><th>Waktu</th><th>Tugas</th></tr>
+                    </thead>
+                    <tbody id="jadwal-tbody">
+                        <tr><td colspan="4" class="text-center text-muted py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i>Memuat jadwal...</td></tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <div class="info-card warning">
-            <div class="card-header-title"><div class="card-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>4. Kerusakan / Kecelakaan Minggu Ini</div>
-            <div class="ckl-group">
-                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada kerusakan pada struktur greenhouse</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada kecelakaan kerja selama 1 minggu</span></div>
-                <div class="ckl-item"><div class="ckl-box"></div><span>Tidak ada kehilangan barang/alat</span></div>
+            <div style="background:var(--green-light);border-radius:12px;padding:14px;margin-top:15px;text-align:center;">
+                <small style="color:var(--green-dark);"><i class="fa-solid fa-circle-info me-1"></i>Jadwal dikelola oleh Admin melalui Google Sheets.</small>
             </div>
-            <div style="background:#fff8e1;border-radius:10px;padding:16px;margin-top:14px;">
-                <small style="color:#e65100;font-weight:600;"><i class="fa-solid fa-pen me-1"></i>Jika ada kecelakaan/kerusakan, jelaskan di bawah ini:</small>
-                <div style="margin-top:10px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
-                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
-                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
-                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
-                <div style="margin-top:6px;border-bottom:1.5px dashed #ccc;padding-bottom:18px;min-height:20px;"></div>
-            </div>
+        </section>
+
+        <footer class="footer">
+            <p><i class="fa-solid fa-leaf me-1"></i> KWT Agro Tanjung — Sistem Digital</p>
+        </footer>
+
+        <!-- BOTTOM NAV MOBILE -->
+        <div class="bottom-nav">
+            <a href="#hero" class="active"><i class="fa-solid fa-house"></i>Beranda</a>
+            <a href="#prosedur"><i class="fa-solid fa-clipboard-list"></i>Prosedur</a>
+            <a href="#checklist"><i class="fa-solid fa-pen-to-square"></i>Isi Checklist</a>
+            <a href="#jadwal"><i class="fa-solid fa-calendar-days"></i>Jadwal</a>
         </div>
-
-        <div class="text-center mt-4">
-            <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print me-2"></i>Cetak Checklist</button>
-        </div>
-    </section>
-
-    <!-- JADWAL PIKET -->
-    <section class="section" id="jadwal">
-        <h2 class="section-title"><i class="fa-solid fa-calendar-days me-2"></i>Jadwal Piket Mingguan</h2>
-        <p class="section-desc">Pembagian jadwal piket greenhouse KWT Agro Tanjung</p>
-
-        <div class="jadwal-wrap">
-            <table class="jadwal-table">
-                <thead>
-                    <tr><th>Hari</th><th>Nama Petugas</th><th>Waktu</th><th>Tugas</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td><span class="hari-badge weekday">Senin</span></td><td><b>RT 6</b></td><td>16.00 s.d selesai</td><td>Penyiraman & pengecekan</td></tr>
-                    <tr><td><span class="hari-badge weekday">Selasa</span></td><td><b>RT 1</b></td><td>16.00 s.d selesai</td><td>Pemupukan & perawatan</td></tr>
-                    <tr><td><span class="hari-badge weekday">Rabu</span></td><td><b>RT 5</b></td><td>16.00 s.d selesai</td><td>Penyiraman & pembersihan</td></tr>
-                    <tr><td><span class="hari-badge weekday">Kamis</span></td><td><b>RT 2</b></td><td>16.00 s.d selesai</td><td>Pengecekan hama & penyakit</td></tr>
-                    <tr><td><span class="hari-badge weekday">Jumat</span></td><td><b>RT 4</b></td><td>16.00 s.d selesai</td><td>Penyiraman & inventaris alat</td></tr>
-                    <tr><td><span class="hari-badge weekend">Sabtu</span></td><td><b>RT 3</b></td><td>16.00 s.d selesai</td><td>Pembersihan & penyiraman</td></tr>
-                    <tr><td><span class="hari-badge weekend">Minggu</span></td><td><b>Pengurus KWT</b></td><td>16.00 s.d selesai</td><td>Pengecekan kondisi umum</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div style="background:var(--green-light);border-radius:12px;padding:14px;margin-top:15px;text-align:center;">
-            <small style="color:var(--green-dark);"><i class="fa-solid fa-circle-info me-1"></i>Jadwal dapat berubah sesuai keputusan koordinator. Hubungi pengurus untuk info terbaru.</small>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p><i class="fa-solid fa-leaf me-1"></i> KWT Agro Tanjung — Keselamatan & Kesehatan Kerja Greenhouse</p>
-        <p style="font-size:0.75rem;margin-top:5px;opacity:0.6;">© 2026 Panduan K3 Digital</p>
-    </footer>
-
-    <!-- MOBILE BOTTOM NAV -->
-    <div class="bottom-nav">
-        <a href="#hero" class="active"><i class="fa-solid fa-house"></i>Beranda</a>
-        <a href="#prosedur"><i class="fa-solid fa-clipboard-list"></i>Prosedur</a>
-        <a href="#mitigasi"><i class="fa-solid fa-triangle-exclamation"></i>Mitigasi</a>
-        <a href="#checklist"><i class="fa-solid fa-clipboard-check"></i>Checklist</a>
-        <a href="#jadwal"><i class="fa-solid fa-calendar-days"></i>Jadwal</a>
     </div>
 
     <script>
-        // Smooth scroll
+        // ====================================================================
+        // KONFIGURASI URL APPS SCRIPT
+        // ====================================================================
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0mPSx33l9_8XnhunRR21Fxo6I6LjTxv3IqAb7mEs4T0ezmRxErFV0F_gT_j8ZwaGH/exec";
+        // ====================================================================
+
+        // UI Helpers
+        const loader = document.getElementById('loader-overlay');
+        const loaderText = document.getElementById('loader-text');
+        function showLoader(show, text = 'Memproses...') {
+            loaderText.innerText = text;
+            loader.style.display = show ? 'flex' : 'none';
+        }
+
+        function showToast(msg, isError = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast-kwt ${isError ? 'error' : ''}`;
+            toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-circle-xmark' : 'fa-circle-check'}"></i> <span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function toggleInput(selectId, targetValue, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+            input.style.display = (select.value === targetValue) ? 'block' : 'none';
+            if (select.value !== targetValue) input.value = '';
+        }
+
+        // Confirm Modal
+        function openConfirmModal(e) {
+            e.preventDefault();
+            // Validasi manual nama
+            const nama = document.getElementById('inp-nama').value.trim();
+            if (!nama) {
+                showToast('Nama pengisi wajib diisi!', true);
+                document.getElementById('inp-nama').focus();
+                return false;
+            }
+            document.getElementById('confirm-modal').style.display = 'flex';
+            return false;
+        }
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        // ====================================================================
+        // LOGIC APLIKASI
+        // ====================================================================
+        let currentUser = null;
+
+        // Auto-fill tanggal hari ini
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const dateInput = document.getElementById('inp-tanggal');
+            if (dateInput) dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+            const storedUser = sessionStorage.getItem('kwtK3User');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                showAppScreen();
+            }
+        });
+
+        function showAppScreen() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'block';
+            // Auto-fill nama jika sudah login
+            const namaInput = document.getElementById('inp-nama');
+            if (namaInput && currentUser && currentUser.username) {
+                namaInput.value = currentUser.username;
+            }
+            loadDataDariSheets();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('kwtK3User');
+            location.reload();
+        }
+
+        // Proses Login
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (APPS_SCRIPT_URL === "PASTE_LINK_APPS_SCRIPT_ANDA_DISINI") {
+                alert("Anda belum memasukkan APPS_SCRIPT_URL di dalam kode HTML!");
+                return;
+            }
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value.trim();
+
+            showLoader(true, 'Verifikasi akun...');
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', username: u, password: p })
+                });
+                const result = await response.json();
+                if (result.status) {
+                    showToast('Login berhasil!');
+                    currentUser = result.data;
+                    sessionStorage.setItem('kwtK3User', JSON.stringify(currentUser));
+                    showAppScreen();
+                } else {
+                    showToast(result.message, true);
+                }
+            } catch (err) {
+                showToast('Gagal terhubung ke server. Periksa koneksi internet.', true);
+            }
+            showLoader(false);
+        });
+
+        // Ambil data dari Sheets
+        async function loadDataDariSheets() {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL + '?action=getAppData');
+                const result = await response.json();
+                if (result.status && result.data && result.data.jadwalPiket) {
+                    renderJadwal(result.data.jadwalPiket);
+                }
+            } catch (err) {
+                console.error("Gagal memuat jadwal:", err);
+                document.getElementById('jadwal-tbody').innerHTML = '<tr><td colspan="4" class="text-danger text-center py-3">Gagal memuat jadwal. Periksa koneksi.</td></tr>';
+            }
+        }
+
+        function renderJadwal(jadwalArray) {
+            const tbody = document.getElementById('jadwal-tbody');
+            tbody.innerHTML = '';
+            if (!jadwalArray || jadwalArray.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3">Jadwal belum tersedia.</td></tr>';
+                return;
+            }
+            jadwalArray.forEach(j => {
+                const isWeekend = (j.hari.toLowerCase() === 'sabtu' || j.hari.toLowerCase() === 'minggu') ? 'weekend' : 'weekday';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="hari-badge ${isWeekend}">${j.hari}</span></td>
+                    <td><b>${j.nama}</b></td>
+                    <td>${j.waktu}</td>
+                    <td>${j.tugas}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Submit Checklist (dipanggil dari modal "Ya, Kirim")
+        async function submitChecklist() {
+            closeConfirmModal();
+
+            if (APPS_SCRIPT_URL === "PASTE_LINK_APPS_SCRIPT_ANDA_DISINI") {
+                alert("Anda belum memasukkan APPS_SCRIPT_URL di dalam kode HTML!");
+                return;
+            }
+
+            const kepatuhan = [];
+            document.querySelectorAll('.chk-prosedur:checked').forEach(cb => kepatuhan.push(cb.value));
+
+            const payload = {
+                action: 'simpanChecklist',
+                data: {
+                    tanggalIsi: document.getElementById('inp-tanggal').value,
+                    pengisi: document.getElementById('inp-nama').value.trim(),
+                    kondisiGreenhouse: document.getElementById('inp-kondisi').value,
+                    kepatuhanProsedur: kepatuhan,
+                    kelengkapanAlat: document.getElementById('inp-kelengkapan').value,
+                    barangHilang: document.getElementById('inp-barang-hilang').value.trim() || '-',
+                    adaKerusakan: document.getElementById('inp-ada-kerusakan').value,
+                    detailKerusakan: document.getElementById('inp-detail-kerusakan').value.trim() || '-',
+                    catatan: document.getElementById('inp-catatan').value.trim() || '-'
+                }
+            };
+
+            const btn = document.getElementById('btn-submit-ckl');
+            btn.disabled = true;
+            showLoader(true, 'Mengirim checklist ke Database...');
+
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.status) {
+                    showToast('✅ Berhasil! Checklist telah disimpan ke Database.');
+                    // Reset form
+                    document.getElementById('form-checklist').reset();
+                    document.getElementById('inp-barang-hilang').style.display = 'none';
+                    document.getElementById('inp-detail-kerusakan').style.display = 'none';
+                    // Re-fill nama & tanggal
+                    if (currentUser) document.getElementById('inp-nama').value = currentUser.username;
+                    const today = new Date();
+                    document.getElementById('inp-tanggal').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+                    // Scroll ke atas form
+                    document.getElementById('checklist').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    showToast(result.message || 'Gagal menyimpan data.', true);
+                }
+            } catch (err) {
+                showToast('Gagal mengirim data. Periksa koneksi internet.', true);
+            }
+            btn.disabled = false;
+            showLoader(false);
+        }
+
+        // Navigasi Smooth Scroll & Active State
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 e.preventDefault();
                 const t = document.querySelector(a.getAttribute('href'));
                 if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // Update active nav
-                document.querySelectorAll('.bottom-nav a, .nav-links a').forEach(n => n.classList.remove('active'));
-                document.querySelectorAll(`a[href="${a.getAttribute('href')}"]`).forEach(n => n.classList.add('active'));
             });
         });
 
-        // Navbar scroll effect
         window.addEventListener('scroll', () => {
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-            // Update active section on scroll
-            const sections = ['hero','prosedur','hak-kewajiban','mitigasi','checklist','jadwal'];
+            const nb = document.getElementById('navbar');
+            if (nb) nb.classList.toggle('scrolled', window.scrollY > 50);
+            const sections = ['hero', 'prosedur', 'hak-kewajiban', 'mitigasi', 'checklist', 'jadwal'];
             let current = '';
             sections.forEach(id => {
                 const el = document.getElementById(id);
@@ -446,14 +714,6 @@
                     n.classList.toggle('active', n.getAttribute('href') === '#' + current);
                 });
             }
-        });
-
-        // Scroll animation (Intersection Observer)
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.info-card').forEach(c => observer.observe(c));
         });
     </script>
 </body>
